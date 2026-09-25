@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>APOLLO 20</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0d0c0b;
+      color: white;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    .cover {
+      position: relative;
+      width: min(100%, 1080px);
+      line-height: 0;
+      overflow: hidden;
+    }
+
+    .cover img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Normal image */
+    .main-image {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* RGB copies used only during the anomaly */
+    .glitch-image {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .red {
+      mix-blend-mode: screen;
+      filter:
+        sepia(1)
+        saturate(100)
+        hue-rotate(315deg);
+    }
+
+    .blue {
+      mix-blend-mode: screen;
+      filter:
+        sepia(1)
+        saturate(100)
+        hue-rotate(160deg);
+    }
+
+    .cover.glitching .red {
+      opacity: 0.55;
+      transform: translateX(-7px);
+      clip-path: polygon(
+        0 18%, 100% 18%,
+        100% 31%, 0 31%,
+        0 61%, 100% 61%,
+        100% 69%, 0 69%
+      );
+    }
+
+    .cover.glitching .blue {
+      opacity: 0.55;
+      transform: translateX(7px);
+      clip-path: polygon(
+        0 8%, 100% 8%,
+        100% 16%, 0 16%,
+        0 39%, 100% 39%,
+        100% 49%, 0 49%,
+        0 77%, 100% 77%,
+        100% 84%, 0 84%
+      );
+    }
+
+    .cover.glitching .main-image {
+      animation: image-jump 90ms steps(2) 3;
+    }
+
+    @keyframes image-jump {
+      0%   { transform: translate(0, 0); }
+      33%  { transform: translate(-2px, 1px); }
+      66%  { transform: translate(3px, -1px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .coming-soon {
+      padding: 42px 20px 60px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      letter-spacing: 0.35em;
+      text-align: center;
+      color: #aaa;
+    }
+
+    @media (max-width: 600px) {
+      .coming-soon {
+        padding-top: 28px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="cover" id="cover">
+
+    <img
+      src="Apollo20.jpg"
+      class="main-image"
+      alt="Apollo 20"
+    >
+
+    <img
+      src="Apollo20.jpg"
+      class="glitch-image red"
+      aria-hidden="true"
+    >
+
+    <img
+      src="Apollo20.jpg"
+      class="glitch-image blue"
+      aria-hidden="true"
+    >
+
+  </main>
+
+  <div class="coming-soon">
+    COMING SOON
+  </div>
+
+
+  <script>
+    const cover = document.getElementById("cover");
+
+    function glitch() {
+
+      cover.classList.add("glitching");
+
+      setTimeout(() => {
+        cover.classList.remove("glitching");
+      }, 220);
+
+      /*
+        The next anomaly happens somewhere
+        between 8 and 25 seconds from now.
+      */
+
+      const nextGlitch =
+        8000 + Math.random() * 17000;
+
+      setTimeout(glitch, nextGlitch);
+    }
+
+    /*
+      Don't glitch immediately.
+      Let the visitor believe everything is normal.
+    */
+
+    setTimeout(glitch, 6000 + Math.random() * 9000);
+
+  </script>
+
+</body>
+</html>
